@@ -9,9 +9,58 @@
 # (Simulando um log que sempre deve ocorrer).
 
 class EstoqueInsuficienteError(Exception):
-    def __init__(self, item_id, quantidade_pedida):
-        self.item_id = item_id
-        self.quantidade_pedida = quantidade_pedida
-        super().__init__(f" ")
+    """Exceção customizada para estoque insuficiente."""
+    pass
 
-    
+estoque_atual = {'item1': 10, 'item2': 5}
+
+def processar_pedido(item_id, quantidade_pedida):
+    """
+    Processa um pedido, verificando o estoque e levantando exceções se necessário.
+    """
+    if item_id not in estoque_atual:
+        raise KeyError(f"Item {item_id} não encontrado.")
+
+    if quantidade_pedida > estoque_atual[item_id]:
+        raise EstoqueInsuficienteError(
+            f"Estoque insuficiente para {item_id}. "
+            f"Pedido de {quantidade_pedida}, disponível: {estoque_atual[item_id]}"
+        )
+
+    print("Pedido Aprovado! Estoque atualizado.")
+
+print("\n--- Testando cenário de estoque insuficiente ---")
+try:
+    processar_pedido('item1', 15)  
+except KeyError as e:
+    print(f"Erro de Pedido: Item não cadastrado. {e}")
+except EstoqueInsuficienteError as e:
+    print(f"Erro de Lógica: {e}")
+except Exception as e:
+    print(f"Ocorreu um erro inesperado: {e}")
+finally:
+    print("LOG: Tentativa de processar pedido finalizada.")
+
+print("\n--- Testando cenário de item não encontrado ---")
+try:
+    processar_pedido('item3', 1)  
+except KeyError as e:
+    print(f"Erro de Pedido: Item não cadastrado. {e}")
+except EstoqueInsuficienteError as e:
+    print(f"Erro de Lógica: {e}")
+except Exception as e:
+    print(f"Ocorreu um erro inesperado: {e}")
+finally:
+    print("LOG: Tentativa de processar pedido finalizada.")
+
+print("\n--- Testando cenário de pedido aprovado ---")
+try:
+    processar_pedido('item2', 3) 
+except KeyError as e:
+    print(f"Erro de Pedido: Item não cadastrado. {e}")
+except EstoqueInsuficienteError as e:
+    print(f"Erro de Lógica: {e}")
+except Exception as e:
+    print(f"Ocorreu um erro inesperado: {e}")
+finally:
+    print("LOG: Tentativa de processar pedido finalizada.")
